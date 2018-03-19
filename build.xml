@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     OLSA Client Toolkit build configuration file                   
+     ====================================================================== -->
+<project name="TestTLS Use" basedir="." default="alltests">
+    <description>
+            TestTLS Example
+    </description>
+    <property file="build.properties" />
+
+    <!-- Compile-time classpath: for "compile" target, or,  -->
+    <!-- all code to be shipped in the finished product     -->
+    <path id="source.compile.classpath">
+        <pathelement path="${project.base}" />
+		<pathelement path="${json.jar}" />
+    </path>
+
+    <!-- Test execution time classpath, including the      -->
+    <!-- source and test compile classpaths, and JDBC.     -->
+    <path id="run.classpath">
+        <pathelement path="${project.classes}" />
+        <path refid="source.compile.classpath" />
+    </path>
+
+
+    <!-- ================================= 
+          target: build
+          Build the OLSA Client Toolkit              
+         ================================= -->
+    <target name="build" description="Builds everything (after 'clean'ing)" depends="compile">
+        <tstamp>
+            <format property="build.time" pattern="MM/dd/yyyy hh:mm:ss.SSS a z" />
+        </tstamp>
+        <echo level="info" message="${build.time}" />
+    </target>
+
+    <!-- ================================= 
+          target: prepare
+          Prepare peforms prerequisites prior to build              
+         ================================= -->
+    <target name="prepare" description="Prepare for build">
+        <mkdir dir="${project.classes}" />
+    </target>
+
+    <!-- ================================= 
+          target: clean
+          Delete client classes         
+         ================================= -->
+    <target name="clean">
+        <delete dir="${project.classes}" />
+    </target>
+
+    <!-- ================================= 
+          target: compile
+          Compile the sample code         
+         ================================= -->
+    <target name="compile" depends="clean, prepare">
+        <javac srcdir="${project.source}" destdir="${project.classes}" debug="on">
+            <classpath>
+                <path refid="source.compile.classpath" />
+            </classpath>
+        </javac>
+    </target>
+
+		    <!-- ================================= 
+          target: testtls
+          Run the Test TLS explicitly enable TLSv1.2 Example         
+         ================================= -->
+    <target name="testtls" depends="" description="Runs TestTLS">
+		<echo level="info" message="Uses the default Java configuration" />
+        <java classname="example.TlsCheck" fork="yes">
+            <classpath>
+                <path refid="run.classpath" />
+            </classpath>
+        </java>
+    </target>
+	
+		<!-- ================================= 
+          target: testtls2
+          Run the Test TLS explicitly enable TLSv1 Example         
+         ================================= -->
+    <target name="testtls2" depends="" description="Runs TestTLS forcing TLS 1.0 only">
+		<echo level="info" message="Sanity Check. Explictly sets -Djdk.tls.client.protocols=TLSv1 and -Dhttps.protocols=TLSv1" />
+        <java classname="example.TlsCheck" fork="yes">
+            <jvmarg value='-Djdk.tls.client.protocols="TLSv1"' />
+            <jvmarg value='-Dhttps.protocols="TLSv1"' />
+            <classpath>
+                <path refid="run.classpath" />
+            </classpath>
+        </java>
+    </target>
+	
+	    <!-- ================================= 
+          target: testtls3
+          Run the Test TLS explicitly enable TLSv1.2 Example         
+         ================================= -->
+    <target name="testtls3" depends="" description="Runs TestTLS forcing TLS 1.2">
+		<echo level="info" message="Explictly sets -Djdk.tls.client.protocols=TLSv1.2 and -Dhttps.protocols=TLSv1.2" />
+        <java classname="example.TlsCheck" fork="yes">
+            <jvmarg value='-Djdk.tls.client.protocols="TLSv1.2"' />
+            <jvmarg value='-Dhttps.protocols="TLSv1.2"' />
+            <classpath>
+                <path refid="run.classpath" />
+            </classpath>
+        </java>
+    </target>
+
+
+	
+	<target name="alltests" depends="build, testtls,testtls2,testtls3" >
+	</target>
+</project>
+
