@@ -64,7 +64,7 @@
 
 		    <!-- ================================= 
           target: testtls
-          Run the Test TLS explicitly enable TLSv1.2 Example         
+          Run the Test TLS using default config         
          ================================= -->
     <target name="testtls" depends="" description="Runs TestTLS">
 		<echo level="info" message="Uses the default Java configuration" />
@@ -105,9 +105,59 @@
         </java>
     </target>
 
-
+		    <!-- ================================= 
+          target: testolsatls
+          Run the Test OLSA TLS using default         
+         ================================= -->
+    <target name="testolsatls" depends="" description="Runs OlsaTLSCheck">
+		<echo level="info" message="Uses the default Java configuration" />
+        <java classname="example.OlsaTlsCheck" fork="yes">
+					<arg value="${project.olsaUrl}"></arg>
+            <classpath>
+                <path refid="run.classpath" />
+            </classpath>
+        </java>
+    </target>
+	
+			<!-- ================================= 
+          target: testolsatls2
+          Run the Test TLS explicitly enable TLSv1 Example         
+         ================================= -->
+    <target name="testolsatls2" depends="" description="Runs OlsaTLSCheck forcing TLS 1.0 only">
+		<echo level="info" message="Sanity Check. Explictly sets -Djdk.tls.client.protocols=TLSv1 and -Dhttps.protocols=TLSv1" />
+        <java classname="example.OlsaTlsCheck" fork="yes">
+					<arg value="${project.olsaUrl}"></arg>
+            <jvmarg value='-Djdk.tls.client.protocols="TLSv1"' />
+            <jvmarg value='-Dhttps.protocols="TLSv1"' />
+            <classpath>
+                <path refid="run.classpath" />
+            </classpath>
+        </java>
+    </target>
+	
+	    <!-- ================================= 
+          target: testolsatls3
+          Run the Test TLS explicitly enable TLSv1.2 Example         
+         ================================= -->
+    <target name="testolsatls3" depends="" description="Runs OlsaTLSCheck forcing TLS 1.2">
+		<echo level="info" message="Explictly sets -Djdk.tls.client.protocols=TLSv1.2 and -Dhttps.protocols=TLSv1.2" />
+        <java classname="example.OlsaTlsCheck" fork="yes">
+					<arg value="${project.olsaUrl}"></arg>
+            <jvmarg value='-Djdk.tls.client.protocols="TLSv1.2"' />
+            <jvmarg value='-Dhttps.protocols="TLSv1.2"' />
+            <classpath>
+                <path refid="run.classpath" />
+            </classpath>
+        </java>
+    </target>
 	
 	<target name="alltests" depends="build, testtls,testtls2,testtls3" >
 	</target>
+	
+		<target name="allolsatests" depends="build, testolsatls,testolsatls2,testolsatls3" >
+	</target>
+
 </project>
+
+
 
