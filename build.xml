@@ -2,7 +2,7 @@
 <!-- ====================================================================== 
      OLSA Client Toolkit build configuration file                   
      ====================================================================== -->
-<project name="TestTLS Use" basedir="." default="alltests">
+<project name="TestTLS Use" basedir="." default="build">
     <description>
             TestTLS Example
     </description>
